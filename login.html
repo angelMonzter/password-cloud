@@ -5,27 +5,37 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foundation for Sites</title>
+    <link rel="stylesheet" href="scss/styles.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/aa5d3c9139.js" crossorigin="anonymous"></script>
   </head>
   <body>
     <div class="grid-container">
         
-        <div class="grid-x">
+        <div class="grid-x contenedor">
             <div class="large-12 cell grid-padding-x">
                 <div class="text-center">
-                    <h2>Inciar Sesion</h2>
+                    <h2>INICIAR SESION</h2>
                 </div>
-                <div>
+                <div class="contenedor_formulario">
                     <form action="">
-                        <label for="">Usuario
+                        <div class="contenedor_input">
+                            <label for="">Usuario</label>
                             <input type="text" class="" id="" placeholder="Usuario">
-                        </label>
-                        <label for="">Contraseña
-                            <input type="text" class="" id="" placeholder="Contraseña">
-                        </label>
-                        <div>
+
+                            <label for="">Contraseña</label>
+                            <input type="password" class="" id="" placeholder="Contraseña">
+                        </div>
+                        <div class="text-center password">
+                            <a href="">¿Olvidaste tu constraseña?</a>
+                        </div>
+                        <div class="contenedor_botones">
                             <!--<button class="button primary  expanded">Iniciar</button>-->
-                            <a href="passwords.html" class="button primary expanded">Iniciar</a>
+                            <a href="passwords.html" class="button hollow primary expanded">Iniciar</a>
+                            <a href="registro.html" class="button hollow success expanded ">Registrarme</a>
                         </div>
                     </form>
                 </div>
