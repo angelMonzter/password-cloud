@@ -6,8 +6,8 @@
 			$this->sentencia = "INSERT INTO datos_cuenta VALUES ($datos_cuenta_id,'$nombre_cuenta','$usuario','$password','$datos_extra','$usuario_sid');";
 			$this->ejecutar_sentencia();
 		}
-		public function modificar($plan_id,$status_cliente, $fecha_hoy){
-			$this->sentencia="UPDATE datos_cuenta_id SET status_cliente_seguro = '$status_cliente', fecha_cambio_status = '$fecha_hoy' WHERE seguro_perona_id = '$plan_id';";
+		public function modificar($nombre_cuenta,$usuario,$password,$datos_extra,$usuario_sid,$cuenta_editar_id){
+			$this->sentencia="UPDATE datos_cuenta SET nombre_cuenta = '$nombre_cuenta', usuario = '$usuario', password = '$password' , datos_extra = '$datos_extra', usuario_sid = '$usuario_sid' WHERE datos_cuenta_id = '$cuenta_editar_id';";
 			return $this->ejecutar_sentencia();
 		}
 		public function eliminar($datos_cuenta_id){
@@ -29,7 +29,7 @@
 	    $usuario = $_POST['usuario'];
 	    $password = $_POST['password'];
 		$datos_extra = $_POST['datos_extra'];
-	    $editar = $_POST['editar'];
+	    $cuenta_editar_id = $_POST['cuenta_editar_id'];
 	    $usuario_sid = 0;
 
 	    if ( empty($usuario) || empty($password) ) {
@@ -38,21 +38,21 @@
 		    );
 	    }else{
 
-		    if (empty($editar)) {
+		    if (empty($cuenta_editar_id)) {
 		    	$resultado = $obj->alta($datos_cuenta_id,$nombre_cuenta,$usuario,$password,$datos_extra,$usuario_sid);
 	    	}else{
-		    	$resultado = $obj->modificar($datos_cuenta_id,$nombre_cuenta,$usuario,$password,$datos_extra,$usuario_sid);
+		    	$resultado = $obj->modificar($nombre_cuenta,$usuario,$password,$datos_extra,$usuario_sid,$cuenta_editar_id);
 	    	}
 
 		    if ($resultado) {
-			    if(empty($editar)){
+			    if(empty($cuenta_editar_id)){
 					$respuesta = array(
 						'respuesta' => 'agregado'
 					);
 				}else{
 					$respuesta = array(
 						'respuesta' => 'editado',
-						'url' => 'perfil.html'
+						'url' => 'password.html'
 					);
 				}
 		    }else{

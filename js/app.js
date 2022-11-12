@@ -1,4 +1,6 @@
-let editar_id;
+let filtro;
+let datos_api;
+
 
 function redireccionar(url) {
 	setTimeout(function() {
@@ -13,12 +15,15 @@ function createData(dataThis) {
     url: $(dataThis).attr('action'),
     dataType: 'json',
     success: function(data) {
-    	//resultado(data);
+            //resultado(data);
     	if (data.respuesta === 'agregado') {
     		$(dataThis)[0].reset();
     	}
     	if (data.respuesta === 'editado') {
-    		redireccionar(data.url);
+    		//redireccionar(data.url);
+            console.log(data);
+            $(dataThis)[0].reset();
+            $('#cuenta_editar_id').val('');
     	}
     }
   })
@@ -40,87 +45,96 @@ function deleteData(id, action, tabla) {
     })
 }
 
-function datos_edicion(editar_id, action, tabla) {
+function obtener_cuentas(filtro, action, tabla) {
     $.ajax({
         type: 'POST',
         data: {
-            editar_id: editar_id,
+            filtro: filtro,
             obtener: tabla
         },
         url: action,
         dataType: 'json',
         success: function(data) {
-            console.log(data);
+            datos_api = {...data};
+
+            mostrar_cuentas(datos_api);
+            if( filtro != null ){
+                cargar_datos_editar(datos_api);
+            }
         }
     })
 }
 
-function mostrar_cuentas(filtro) {
-  $.ajax({
-    type: 'POST',
-    data: {
-        filtro: filtro
-    },
-    url: 'php/mostrar_cuentas_api.php',
-    dataType: 'json',
-    success: function(data) {
-        let cuentas = data.no_cuentas;
-        if(cuentas == 0 || cuentas == null){
-            $('.container_tarjetas').append(`<div class="card-divider"> <h2>No hay cuentas disponibles</h2> </div>`);
-        }else{
-            for (let i = 0; i < cuentas; i++) {
-            $('.container_tarjetas')
-                .append(`<div class="tajeta_individual">
+function cargar_datos_editar(datos_api) {
+
+    //entramos al array para hacer destructuring de datos
+    const array_datos = datos_api.cuentas[0];
+    const { datos_cuenta_id, nombre_cuenta, usuario, password, datos_extra } = array_datos;
+
+    $('#nombre_cuenta').val(nombre_cuenta);
+    $('#usuario').val(usuario);
+    $('#password').val(password);
+    $('#datos_extra').val(datos_extra);
+    $('#datos_extra').val(datos_extra);
+    $('#cuenta_editar_id').val(datos_cuenta_id);
+}
+
+function mostrar_cuentas(datos_api) {
+    let cuentas = datos_api.no_cuentas;
+    if(cuentas == 0 || cuentas == null){
+        $('.container_tarjetas').append(`<div class="card-divider"> <h2>No hay cuentas disponibles</h2> </div>`);
+    }else{
+        for (let i = 0; i < cuentas; i++) {
+        $('.container_tarjetas')
+            .append(`<div class="tajeta_individual">
                 <div class="card">
-                        <div class="card-divider">
-                            <h2>${data.cuentas[i].nombre_cuenta}</h2>
+                    <div class="card-divider">
+                        <h2>${datos_api.cuentas[i].nombre_cuenta}</h2>
+                    </div>
+                    <div class="card-section">
+                        <div class="grid-x">
+                            <div class="large-6 medium-6 small-10 cell">
+                                <h4>Usuario / Correo - ${datos_api.cuentas[i].usuario}</h4>
+                            </div>
+                            <div class="large-6  medium-6 small-2 cell text-center">
+                                <button class="button tiny hollow primary">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="card-section">
-                            <div class="grid-x">
-                                <div class="large-6 medium-6 small-10 cell">
-                                    <h4>Usuario / Correo - ${data.cuentas[i].usuario}</h4>
-                                </div>
-                                <div class="large-6  medium-6 small-2 cell text-center">
-                                    <button class="button tiny hollow primary">
-                                        <i class="fa-solid fa-copy"></i>
-                                    </button>
-                                </div>
+                        <div class="grid-x">
+                            <div class="large-6 medium-6 small-10 cell">
+                                <h4>Contraseña - ********* </h4>
                             </div>
-                            <div class="grid-x">
-                                <div class="large-6 medium-6 small-10 cell">
-                                    <h4>Contraseña - ********* </h4>
-                                </div>
-                                <div class="large-6 medium-6 small-2 cell text-center">
-                                    <button class="button tiny hollow primary">
-                                        <i class="fa-solid fa-copy"></i>
-                                    </button>
-                                </div>
+                            <div class="large-6 medium-6 small-2 cell text-center">
+                                <button class="button tiny hollow primary">
+                                    <i class="fa-solid fa-copy"></i>
+                                </button>
                             </div>
-                            <hr>
-                            <div class="grid-x">
+                        </div>
+                        <hr>
+                        <div class="grid-x">
                             <div class="large-6 medium-6 small-6 cell">
-                                <h5>Datos extra - ${data.cuentas[i].datos_extra}</h5>
+                                <h5>Datos extra - ${datos_api.cuentas[i].datos_extra}</h5>
                             </div>
                             <div class="large-6 medium-6 small-6 cell">
                                 <div class="text-right">
-                                    <a href="#!" class="button warning hollow small editar_tarjeta" data-id="${data.cuentas[i].datos_cuenta_id}">
+                                    <a href="#!" class="button warning hollow small editar_tarjeta" data-id="${datos_api.cuentas[i].datos_cuenta_id}">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
-                                    <a href="#!" class="button alert hollow small borrar_tarjeta" data-id="${data.cuentas[i].datos_cuenta_id}">
+                                    <a href="#!" class="button alert hollow small borrar_tarjeta" data-id="${datos_api.cuentas[i].datos_cuenta_id}">
                                         <i class="fa-solid fa-trash"></i>
                                     </a>
                                 </div>
                             </div>
-                            </div>
                         </div>
                     </div>
-                </div>`);
-            }
+                </div>
+            </div>`);
         }
     }
-  })
 }
-
+ 
 $('.registro-usuario').on('click', function(e){
     e.preventDefault();
 
@@ -144,24 +158,27 @@ $('.container_tarjetas').on('click', '.borrar_tarjeta', function(e){
 $('.container_tarjetas').on('click', '.editar_tarjeta', function(e){
     e.preventDefault();
 
-    editar_id = $(this).attr('data-id');
+    filtro = $(this).attr('data-id');
 
-    redireccionar('cuenta.html?editar_id=' + editar_id);
+    redireccionar('cuenta.html?editar_id=' + filtro);
 
 });
 
 
 $( document ).ready(function() {
-    //mostrar las cuentas guardadas
-    mostrar_cuentas();
 
     //consultar la URL para obtener el id a editar
     const queryString = window.location.search;
 
     const urlParams = new URLSearchParams(queryString);
 
-    editar_id = urlParams.get('editar_id');
+    filtro = urlParams.get('editar_id');
 
-    //mostrar datos a editar
-    datos_edicion(editar_id, 'php/mostrar_cuentas_api.php', 'datos_edicion');
+    if(filtro != '' || filtro != null){
+        //mostrar datos a editar
+        obtener_cuentas(filtro, 'php/mostrar_cuentas_api.php', 'datos_edicion');
+    }else{
+        //mostrar las cuentas guardadas
+        obtener_cuentas('', 'php/mostrar_cuentas_api.php', 'datos');
+    }
 });
