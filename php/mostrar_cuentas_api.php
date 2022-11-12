@@ -1,32 +1,31 @@
 <?php 
 	require("conexion.php");
 	class Mostrar_cuenta extends DBA{
-
 		public function buscar_cuentas($filtro) {
-                $this->sentencia = "SELECT * FROM datos_cuenta WHERE datos_cuenta_id LIKE '%$filtro%'; ";  
-                return $this->obtener_sentencia();
+            $this->sentencia = "SELECT * FROM datos_cuenta WHERE ( datos_cuenta_id LIKE '%$filtro%' || nombre_cuenta LIKE '%$filtro%' || usuario LIKE '%$filtro%' || datos_extra LIKE '%$filtro%'); ";  
+			return $this->obtener_sentencia();
         }
 	}
 
-		$obj = new Mostrar_cuenta();
+	$obj = new Mostrar_cuenta();
 
-	    $filtro = $_POST['filtro'];
+	$filtro = $_POST['filtro'];
 
-		$consultado = $obj->buscar_cuentas($filtro);
-        while ( $fila = $consultado->fetch_assoc() ){
-		
-			$cuenta_id[] = $fila["datos_cuenta_id"];
+	$consultado = $obj->buscar_cuentas($filtro,  $numero_columnas, $columnas);
+	while ( $fila = $consultado->fetch_assoc() ){
 	
-			$numero_cuentas = count($cuenta_id);
-			$array_cuentas[] = $fila;
-		}
-	
-		$datos = array(
-			'no_cuentas' => $numero_cuentas,
-			'cuentas' => $array_cuentas
-		);
-	
-		die(json_encode($datos));
+		$cuenta_id[] = $fila["datos_cuenta_id"];
+
+		$numero_cuentas = count($cuenta_id);
+		$array_cuentas[] = $fila;
+	}
+
+	$datos = array(
+		'no_cuentas' => $numero_cuentas,
+		'cuentas' => $array_cuentas
+	);
+
+	die(json_encode($datos));
 
 	//array_push($datos, $cuenta_id, $nombre_cuenta, $usuario, $password, $datos_extra);
 

@@ -8,6 +8,14 @@ function redireccionar(url) {
   }, 1500);
 }
 
+function limpiarHTML(){
+    const contenido = document.querySelector('.container_tarjetas');
+
+    while ( contenido.firstChild ) {
+        contenido.removeChild(contenido.firstChild);
+    }
+}
+
 function createData(dataThis) {
 	$.ajax({
     type: 'POST',
@@ -45,7 +53,8 @@ function deleteData(id, action, tabla) {
     })
 }
 
-function obtener_cuentas(filtro, action, tabla) {
+function obtener_cuentas(filtro, action, tabla, funcionamiento) {
+    console.log(filtro, action, tabla, funcionamiento);
     $.ajax({
         type: 'POST',
         data: {
@@ -57,9 +66,19 @@ function obtener_cuentas(filtro, action, tabla) {
         success: function(data) {
             datos_api = {...data};
 
-            mostrar_cuentas(datos_api);
-            if( filtro != null ){
-                cargar_datos_editar(datos_api);
+            switch (funcionamiento) {
+                case 'buscando':
+                    limpiarHTML();
+
+                    mostrar_cuentas(datos_api);
+                    break;
+                case 'editar':
+                    mostrar_cuentas(datos_api);
+                    cargar_datos_editar(datos_api);
+                    break;
+                default:
+                    mostrar_cuentas(datos_api);
+                    break;
             }
         }
     })
@@ -164,6 +183,12 @@ $('.container_tarjetas').on('click', '.editar_tarjeta', function(e){
 
 });
 
+$( "#buscar" ).keyup(function() {
+    const valor_buscar = $(this).val();
+
+    obtener_cuentas(valor_buscar, 'php/mostrar_cuentas_api.php', 'datos_edicion', 'buscando');
+});
+
 
 $( document ).ready(function() {
 
@@ -174,11 +199,13 @@ $( document ).ready(function() {
 
     filtro = urlParams.get('editar_id');
 
-    if(filtro != '' || filtro != null){
-        //mostrar datos a editar
-        obtener_cuentas(filtro, 'php/mostrar_cuentas_api.php', 'datos_edicion');
-    }else{
+    console.log(filtro);
+
+    if(filtro == '' || filtro == null){
         //mostrar las cuentas guardadas
-        obtener_cuentas('', 'php/mostrar_cuentas_api.php', 'datos');
+        obtener_cuentas('', 'php/mostrar_cuentas_api.php', 'datos', '');
+    }else{
+        //mostrar datos a editar
+        obtener_cuentas(filtro, 'php/mostrar_cuentas_api.php', 'datos_edicion', 'editar');
     }
 });
