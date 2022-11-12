@@ -6,14 +6,9 @@
             return $this->obtener_sentencia();
         }
         
-        public function lista_cuentas($filtro) {
-            if (empty($filtro)) {
-                $this->sentencia = "SELECT * FROM datos_cuenta WHERE YEAR(fecha_de_registro) = YEAR(NOW());";  
+        public function buscar_cuentas($filtro) {
+                $this->sentencia = "SELECT * FROM datos_cuenta LIKE = '%$filtro%' ";  
                 return $this->obtener_sentencia();
-            }else{
-                $this->sentencia = "SELECT * FROM datos_cuenta WHERE YEAR(fecha_de_registro) = YEAR('$filtro');";  
-                return $this->obtener_sentencia();
-            }
         }
 	}
 
@@ -42,6 +37,31 @@
 	);
 
 	die(json_encode($datos));
+
+	if ($_POST['obtener'] === 'datos_edicion') {
+
+		$obj = new Mostrar_cuenta();
+
+	    $editar_id = $_POST['editar_id'];
+
+		$consultado = $obj->buscar_cuentas($editar_id);
+        while ( $fila = $consultado->fetch_assoc() ){
+        	$nombre_cuenta = $fila["nombre_cuenta"];
+        }
+
+	    if ($consultado) {
+		    $respuesta = array(
+		        'respuesta' => 'datos',
+		        'nombre_cuenta' => $nombre_cuenta,
+		    );
+	    }else{
+			$respuesta = array(
+		        'respuesta' => 'error'
+		    );
+	    }
+
+		die(json_encode($respuesta));
+	}
 
 	//array_push($datos, $cuenta_id, $nombre_cuenta, $usuario, $password, $datos_extra);
 

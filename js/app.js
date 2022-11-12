@@ -40,6 +40,21 @@ function deleteData(id, action, tabla) {
     })
 }
 
+function datos_edicion(editar_id, action, tabla) {
+    $.ajax({
+        type: 'POST',
+        data: {
+            editar_id: editar_id,
+            obtener: tabla
+        },
+        url: action,
+        dataType: 'json',
+        success: function(data) {
+            console.log(data);
+        }
+    })
+}
+
 function mostrar_cuentas(filtro) {
   $.ajax({
     type: 'POST',
@@ -131,11 +146,22 @@ $('.container_tarjetas').on('click', '.editar_tarjeta', function(e){
 
     editar_id = $(this).attr('data-id');
 
-    redireccionar('cuenta.html');
-    console.log(editar_id);
+    redireccionar('cuenta.html?editar_id=' + editar_id);
+
 });
 
+
 $( document ).ready(function() {
+    //mostrar las cuentas guardadas
     mostrar_cuentas();
-    console.log(editar_id);
+
+    //consultar la URL para obtener el id a editar
+    const queryString = window.location.search;
+
+    const urlParams = new URLSearchParams(queryString);
+
+    editar_id = urlParams.get('editar_id');
+
+    //mostrar datos a editar
+    datos_edicion(editar_id, 'php/mostrar_cuentas_api.php', 'datos_edicion');
 });
