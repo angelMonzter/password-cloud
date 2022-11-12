@@ -13,6 +13,18 @@
     <script src="https://kit.fontawesome.com/aa5d3c9139.js" crossorigin="anonymous"></script>
   </head>
   <body>
+    
+    <div class="grid-x menu_perfil">
+        <div class="large-6 small-6 cell">
+            
+        </div>
+        <div class="large-6 small-6 cell">
+            <a href="login.html">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+        </div>
+    </div>
+
     <div class="grid-container">
         
         <div class="grid-x contenedor">
@@ -21,23 +33,24 @@
                     <h2>Registro</h2>
                 </div>
                 <div class="contenedor_formulario">
-                    <form action="">
+                    <form action="php/usuario.php" method="POST" id="registro_usuario">
                         <div class="contenedor_input">
                             <label for="">Nombre</label>
-                            <input type="text" class="" id="" placeholder="Nombre">
+                            <input type="text" class="" id="" placeholder="Nombre" name="nombre">
                             
                             <label for="">Usuario</label>
-                            <input type="text" class="" id="" placeholder="Usuario">
+                            <input type="text" class="" id="" placeholder="Usuario" name="usuario">
                             
                             <label for="">Correo</label>
-                            <input type="text" class="" id="" placeholder="Correo">
+                            <input type="email" class="" id="" placeholder="Correo" name="correo">
 
-                            <label for="">Contraseña</label>
-                            <input type="text" class="" id="" placeholder="Contraseña">
+                            <label for="">Contraseña</label> 
+                            <input type="password" class="" id="" placeholder="Contraseña" name="password">
                         </div>
                         <div class="contenedor_botones">
                             <!--<button class="button primary  expanded">Iniciar</button>-->
-                            <a href="login.html" class="button primary expanded">Registrarme</a>
+                            <a href="#!" class="button primary hollow expanded registro-usuario" id="">Registrarme</a>
+                            <input type="hidden" name="registro" value="usuario">
                         </div>
                     </form>
                 </div>

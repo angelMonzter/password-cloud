@@ -13,6 +13,18 @@
     <script src="https://kit.fontawesome.com/aa5d3c9139.js" crossorigin="anonymous"></script>
   </head>
   <body>
+
+    <div class="grid-x menu_perfil">
+        <div class="large-6 small-6 cell">
+            
+        </div>
+        <div class="large-6 small-6 cell">
+            <a href="passwords.html">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+        </div>
+    </div>
+
     <div class="grid-container">
         
         <div class="grid-x contenedor">
@@ -21,23 +33,24 @@
                     <h2>Datos de la cuenta</h2>
                 </div>
                 <div class="contenedor_formulario">
-                    <form action="">
+                    <form action="php/datos_cuenta.php" method="POST" id="registro_cuenta">
                         <div class="contenedor_input">
                             <label for="">Nombre de la cuenta</label>
-                            <input type="text" class="" id="" placeholder="Nombre de la cuenta">
+                            <input type="text" class="" id="" placeholder="Nombre de la cuenta" name="nombre_cuenta">
                             
                             <label for="">Usuario / Correo</label>
-                            <input type="text" class="" id="" placeholder="Usuario / Correo">
+                            <input type="text" class="" id="" placeholder="Usuario / Correo" name="usuario">
 
                             <label for="">Contraseña</label>
-                            <input type="text" class="" id="" placeholder="Contraseña">
+                            <input type="password" class="" id="" placeholder="Contraseña" name="password">
 
                             <label for="">Datos extra</label>
-                            <input type="text" class="" id="" placeholder="Datos extra">
+                            <input type="text" class="" id="" placeholder="Datos extra" name="datos_extra">
                         </div>
                         <div class="contenedor_botones">
                             <!--<button class="button primary  expanded">Iniciar</button>-->
-                            <a href="passwords.html" class="button primary expanded">Guardar</a>
+                            <a href="#!" class="button primary hollow expanded registro-cuenta">Guardar</a>
+                            <input type="hidden" name="registro" value="cuenta">
                         </div>
                     </form>
                 </div>

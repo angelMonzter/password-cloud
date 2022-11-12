@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/aa5d3c9139.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
   </head>
   <body>
     <div class="grid-container">
@@ -21,21 +22,23 @@
                     <h2>INICIAR SESION</h2>
                 </div>
                 <div class="contenedor_formulario">
-                    <form action="">
+                    <form action="php/iniciar_sesion.php" method="POST" id="datos_sesion">
                         <div class="contenedor_input">
                             <label for="">Usuario</label>
-                            <input type="text" class="" id="" placeholder="Usuario">
+                            <input type="text" class="usuario_sesion" id="" placeholder="Usuario" name="usuario">
 
                             <label for="">Contraseña</label>
-                            <input type="password" class="" id="" placeholder="Contraseña">
+                            <input type="password" class="contraseña_sesion" id="" placeholder="Contraseña" name="password">
                         </div>
                         <div class="text-center password">
                             <a href="">¿Olvidaste tu constraseña?</a>
                         </div>
                         <div class="contenedor_botones">
                             <!--<button class="button primary  expanded">Iniciar</button>-->
-                            <a href="passwords.html" class="button hollow primary expanded">Iniciar</a>
+                            <a href="#!" class="button hollow primary expanded iniciar_sesion">Iniciar</a>
                             <a href="registro.html" class="button hollow success expanded ">Registrarme</a>
+
+                            <input type="hidden" value="usuario" name="login_usuario">
                         </div>
                     </form>
                 </div>
@@ -45,7 +48,9 @@
 
     <script src="node_modules/jquery/dist/jquery.js"></script>
     <script src="node_modules/what-input/dist/what-input.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <script src="node_modules/foundation-sites/dist/js/foundation.js"></script>
+    <script src="js/iniciar_sesion.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

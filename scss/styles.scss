@@ -124,3 +124,14 @@ nav{
     right: 0px;
    }
 }
+.menu_perfil{
+    background-color: azure;
+    padding: 10px;
+    border-bottom: 2px solid rgb(240, 252, 255);
+    .small-6:last-child{
+        text-align: right;
+    }
+    a{
+        padding: 5px;
+    }
+}
