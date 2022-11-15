@@ -3,9 +3,9 @@ let datos_api;
 
 
 function redireccionar(url) {
-	setTimeout(function() {
-      window.location.href = url;
-  }, 1500);
+    setTimeout(function() {
+        window.location.href = url;
+    }, 1500);
 }
 
 function limpiarHTML(){
@@ -116,8 +116,9 @@ function mostrar_cuentas(datos_api) {
                                 <h4>Usuario / Correo - ${datos_api.cuentas[i].usuario}</h4>
                             </div>
                             <div class="large-6  medium-6 small-2 cell text-center">
-                                <button class="button tiny hollow primary">
+                                <button class="button tiny hollow primary usuario_copiar" id-copiar="${datos_api.cuentas[i].datos_cuenta_id}">
                                     <i class="fa-solid fa-copy"></i>
+                                    <input type="hidden" class="info_usuario" value="${datos_api.cuentas[i].usuario}">
                                 </button>
                             </div>
                         </div>
@@ -126,8 +127,9 @@ function mostrar_cuentas(datos_api) {
                                 <h4>Contraseña - ********* </h4>
                             </div>
                             <div class="large-6 medium-6 small-2 cell text-center">
-                                <button class="button tiny hollow primary">
+                                <button class="button tiny hollow primary password_copiar" id-copiar="${datos_api.cuentas[i].datos_cuenta_id}">
                                     <i class="fa-solid fa-copy"></i>
+                                    <input type="hidden" class="info_password" value="${datos_api.cuentas[i].password}">
                                 </button>
                             </div>
                         </div>
@@ -180,13 +182,32 @@ $('.container_tarjetas').on('click', '.editar_tarjeta', function(e){
     filtro = $(this).attr('data-id');
 
     redireccionar('cuenta.html?editar_id=' + filtro);
-
 });
 
 $( "#buscar" ).keyup(function() {
     const valor_buscar = $(this).val();
 
     obtener_cuentas(valor_buscar, 'php/mostrar_cuentas_api.php', 'datos_edicion', 'buscando');
+});
+
+$('.container_tarjetas').on('click', '.usuario_copiar', function(e){
+    e.preventDefault();
+
+    const id_copiar = $(this).attr('id-copiar');
+
+    const input_valor =  jQuery('[id-copiar="' + id_copiar + '"]').children('.info_usuario').last();
+
+    navigator.clipboard.writeText(input_valor.val());
+});
+
+$('.container_tarjetas').on('click', '.password_copiar', function(e){
+    e.preventDefault();
+
+    const id_copiar = $(this).attr('id-copiar');
+
+    const input_valor =  jQuery('[id-copiar="' + id_copiar + '"]').children('.info_password').last();
+
+    navigator.clipboard.writeText(input_valor.val());
 });
 
 
@@ -198,8 +219,6 @@ $( document ).ready(function() {
     const urlParams = new URLSearchParams(queryString);
 
     filtro = urlParams.get('editar_id');
-
-    console.log(filtro);
 
     if(filtro == '' || filtro == null){
         //mostrar las cuentas guardadas
