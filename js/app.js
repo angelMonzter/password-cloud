@@ -133,7 +133,6 @@ function mostrar_cuentas(datos_api) {
                                 </button>
                             </div>
                         </div>
-                        <hr>
                         <div class="grid-x">
                             <div class="large-6 medium-6 small-6 cell">
                                 <h5>Datos extra - ${datos_api.cuentas[i].datos_extra}</h5>
