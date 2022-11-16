@@ -10,6 +10,10 @@
 			$this->sentencia = "SELECT * FROM usuario;";
 			return $this->obtener_sentencia();
 		}
+		public function consulta_sesion($usuario_id) {
+			$this->sentencia = "SELECT * FROM usuario WHERE usuario_id = $usuario_id;";
+			return $this->obtener_sentencia();
+		}
 		public function modificar($plan_id,$status_cliente, $fecha_hoy){
 			$this->sentencia="UPDATE seguro_persona SET status_cliente_seguro = '$status_cliente', fecha_cambio_status = '$fecha_hoy' WHERE seguro_perona_id = '$plan_id';";
 			return $this->ejecutar_sentencia();
@@ -65,5 +69,24 @@
 		    }
 	    }
 		die(json_encode($respuesta));
+	}
+
+	if ($_POST['obtener'] == 'usuario') {
+		
+		$obj = new Usuario();
+
+		$usuario_id = $_POST['filtro'];
+
+		$consultado = $obj->consulta_sesion($usuario_id);
+		while ( $fila = $consultado->fetch_assoc() ){
+			$usuario = $fila["usuario_id"];
+		}
+
+		$datos = array(
+			'respuesta' => 'exito',
+			'usuario_id' => $usuario
+		);
+
+		die(json_encode($datos));
 	}
 ?>

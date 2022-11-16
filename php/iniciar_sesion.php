@@ -38,7 +38,7 @@ if ($_POST['login_usuario'] == 'usuario') {
 
 					$respuesta = array(
 						'respuesta' => 'exito',
-						'usuario' => $usuario_admin
+						'usuario' => $usuario_id
 					);
 				}else{
 					$respuesta = array(

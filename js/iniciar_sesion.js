@@ -10,10 +10,11 @@ $('.iniciar_sesion').on('click', function(e) {
         url: 'php/iniciar_sesion.php',
         dataType: 'json',
         success: function(data) {
-            console.log(data);
             if (data.respuesta == 'exito') {
+                const spin = $('#mostrar_spinner');
+                spin.html('<div class="spinner"></div>');
                 setTimeout(function() {
-                    window.location.href = 'passwords.html';
+                    window.location.href = 'passwords.html?usuario_id=' + data.usuario;
                 }, 2000);
             }else{
                 if(data.usuario == '' || data.usuario == datos.usuario){

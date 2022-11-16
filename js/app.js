@@ -1,6 +1,35 @@
 let filtro;
 let datos_api;
+let sesion;
 
+$( document ).ready(function() {
+    const queryString = window.location.search;
+
+    const urlParams = new URLSearchParams(queryString);
+
+    const usuario = urlParams.get('usuario_id');
+
+    if (usuario == '' || usuario == null || usuario == undefined) {
+        //redireccionar('login.html');
+    }else{
+        obtener_datos(usuario, 'php/usuario.php', 'usuario', 'login');
+        if (sesion) {
+            //consultar la URL para obtener el id a editar
+            filtro = urlParams.get('editar_id');
+
+            if(filtro == '' || filtro == null){
+                //mostrar las cuentas guardadas
+                obtener_datos('', 'php/mostrar_cuentas_api.php', 'datos', '');
+            }else{
+                //mostrar datos a editar
+                obtener_datos(filtro, 'php/mostrar_cuentas_api.php', 'datos_edicion', 'editar');
+            }
+        }else{
+            //redireccionar('login.html');
+            console.log(sesion);
+        }
+    }
+});
 
 function redireccionar(url) {
     setTimeout(function() {
@@ -53,7 +82,7 @@ function deleteData(id, action, tabla) {
     })
 }
 
-function obtener_cuentas(filtro, action, tabla, funcionamiento) {
+function obtener_datos(filtro, action, tabla, funcionamiento) {
     console.log(filtro, action, tabla, funcionamiento);
     $.ajax({
         type: 'POST',
@@ -76,6 +105,9 @@ function obtener_cuentas(filtro, action, tabla, funcionamiento) {
                     mostrar_cuentas(datos_api);
                     cargar_datos_editar(datos_api);
                     break;
+                case 'login':
+                    sesion = datos_api.usuario_id;
+                    break;
                 default:
                     mostrar_cuentas(datos_api);
                     break;
@@ -93,7 +125,6 @@ function cargar_datos_editar(datos_api) {
     $('#nombre_cuenta').val(nombre_cuenta);
     $('#usuario').val(usuario);
     $('#password').val(password);
-    $('#datos_extra').val(datos_extra);
     $('#datos_extra').val(datos_extra);
     $('#cuenta_editar_id').val(datos_cuenta_id);
 }
@@ -186,7 +217,7 @@ $('.container_tarjetas').on('click', '.editar_tarjeta', function(e){
 $( "#buscar" ).keyup(function() {
     const valor_buscar = $(this).val();
 
-    obtener_cuentas(valor_buscar, 'php/mostrar_cuentas_api.php', 'datos_edicion', 'buscando');
+    obtener_datos(valor_buscar, 'php/mostrar_cuentas_api.php', 'datos_edicion', 'buscando');
 });
 
 $('.container_tarjetas').on('click', '.usuario_copiar', function(e){
@@ -209,21 +240,3 @@ $('.container_tarjetas').on('click', '.password_copiar', function(e){
     navigator.clipboard.writeText(input_valor.val());
 });
 
-
-$( document ).ready(function() {
-
-    //consultar la URL para obtener el id a editar
-    const queryString = window.location.search;
-
-    const urlParams = new URLSearchParams(queryString);
-
-    filtro = urlParams.get('editar_id');
-
-    if(filtro == '' || filtro == null){
-        //mostrar las cuentas guardadas
-        obtener_cuentas('', 'php/mostrar_cuentas_api.php', 'datos', '');
-    }else{
-        //mostrar datos a editar
-        obtener_cuentas(filtro, 'php/mostrar_cuentas_api.php', 'datos_edicion', 'editar');
-    }
-});
