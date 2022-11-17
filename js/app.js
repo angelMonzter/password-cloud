@@ -1,35 +1,7 @@
 let filtro;
 let datos_api;
 let sesion;
-
-$( document ).ready(function() {
-    const queryString = window.location.search;
-
-    const urlParams = new URLSearchParams(queryString);
-
-    const usuario = urlParams.get('usuario_id');
-
-    if (usuario == '' || usuario == null || usuario == undefined) {
-        //redireccionar('login.html');
-    }else{
-        obtener_datos(usuario, 'php/usuario.php', 'usuario', 'login');
-        if (sesion) {
-            //consultar la URL para obtener el id a editar
-            filtro = urlParams.get('editar_id');
-
-            if(filtro == '' || filtro == null){
-                //mostrar las cuentas guardadas
-                obtener_datos('', 'php/mostrar_cuentas_api.php', 'datos', '');
-            }else{
-                //mostrar datos a editar
-                obtener_datos(filtro, 'php/mostrar_cuentas_api.php', 'datos_edicion', 'editar');
-            }
-        }else{
-            //redireccionar('login.html');
-            console.log(sesion);
-        }
-    }
-});
+let usuario;
 
 function redireccionar(url) {
     setTimeout(function() {
@@ -67,19 +39,43 @@ function createData(dataThis) {
 }
 
 function deleteData(id, action, tabla) {
-    $.ajax({
-        type: 'POST',
-        data: {
-            id: id,
-            eliminar: tabla
-        },
-        url: action,
-        dataType: 'json',
-        success: function(data) {
-            console.log(data);
-            jQuery('[data-id="' + id + '"]').parents('.tajeta_individual').remove();
+    $.confirm({
+        boxWidth: '90%',
+        useBootstrap: false,
+        title: 'Eliminar',
+        content: 'Confirma para eliminar',
+        buttons: {
+            confirmar: function () {
+                $.alert({
+                    title: '',
+                    content: 'Eliminado!',
+                    boxWidth: '90%',
+                    useBootstrap: false,
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        eliminar: tabla
+                    },
+                    url: action,
+                    dataType: 'json',
+                    success: function(data) {
+                        jQuery('[data-id="' + id + '"]').parents('.tajeta_individual').remove();
+                    }
+                })
+            },
+            cancelar: function () {
+                $.alert({
+                    title: '',
+                    content: 'Cancelado!',
+                    boxWidth: '90%',
+                    useBootstrap: false,
+                });
+            }
         }
-    })
+    });
 }
 
 function obtener_datos(filtro, action, tabla, funcionamiento) {
@@ -107,13 +103,29 @@ function obtener_datos(filtro, action, tabla, funcionamiento) {
                     break;
                 case 'login':
                     sesion = datos_api.usuario_id;
+                    verificar_sesion(sesion);
                     break;
                 default:
                     mostrar_cuentas(datos_api);
                     break;
             }
+            return datos_api.usuario_id;
         }
     })
+}
+
+function verificar_sesion(sesion){
+    if (sesion) {
+        if(filtro == '' || filtro == null){
+            //mostrar las cuentas guardadas
+            obtener_datos('', 'php/mostrar_cuentas_api.php', 'datos', '');
+        }else{
+            //mostrar datos a editar
+            obtener_datos(filtro, 'php/mostrar_cuentas_api.php', 'datos_edicion', 'editar');
+        }
+    }else{
+        redireccionar('login.html');
+    }
 }
 
 function cargar_datos_editar(datos_api) {
@@ -185,6 +197,24 @@ function mostrar_cuentas(datos_api) {
         }
     }
 }
+
+$('#cerrar_sesion').on('click', function (e) {
+    e.preventDefault();
+    
+    redireccionar('php/cerrar_sesion.php?cerrar_sesion=' + true);
+})
+
+$('#crear_cuenta').on('click', function (e) {
+    e.preventDefault();
+    
+    redireccionar('cuenta.html?usuario_id=' + usuario);
+})
+
+$('.link_sesion').on('click', function (e) {
+    e.preventDefault();
+    
+    redireccionar('passwords.html?usuario_id=' + usuario);
+})
  
 $('.registro-usuario').on('click', function(e){
     e.preventDefault();
@@ -211,7 +241,7 @@ $('.container_tarjetas').on('click', '.editar_tarjeta', function(e){
 
     filtro = $(this).attr('data-id');
 
-    redireccionar('cuenta.html?editar_id=' + filtro);
+    redireccionar('cuenta.html?editar_id=' + filtro + '&usuario_id=' + usuario);
 });
 
 $( "#buscar" ).keyup(function() {
@@ -240,3 +270,19 @@ $('.container_tarjetas').on('click', '.password_copiar', function(e){
     navigator.clipboard.writeText(input_valor.val());
 });
 
+$( document ).ready(function() {
+    const queryString = window.location.search;
+
+    const urlParams = new URLSearchParams(queryString);
+
+    usuario = urlParams.get('usuario_id');
+
+    //consultar la URL para obtener el id a editar
+    filtro = urlParams.get('editar_id');
+
+    if (usuario == '' || usuario == null || usuario == undefined) {
+        redireccionar('login.html');
+    }else{
+        obtener_datos(usuario, 'php/usuario.php', 'usuario', 'login');
+    }
+});
