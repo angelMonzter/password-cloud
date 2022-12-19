@@ -11,7 +11,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/aa5d3c9139.js" crossorigin="anonymous"></script>
-  </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+</head>
   <body>
 
     <div class="grid-x menu_perfil">
@@ -36,13 +37,13 @@
                     <form action="php/datos_cuenta.php" method="POST" id="registro_cuenta">
                         <div class="contenedor_input">
                             <label for="">Nombre de la cuenta</label>
-                            <input type="text" class="" id="nombre_cuenta" placeholder="Nombre de la cuenta" name="nombre_cuenta">
+                            <input type="text" class="campo_vacio" id="nombre_cuenta" placeholder="Nombre de la cuenta" name="nombre_cuenta">
                             
                             <label for="">Usuario / Correo</label>
-                            <input type="text" class="" id="usuario" placeholder="Usuario / Correo" name="usuario">
+                            <input type="text" class="campo_vacio" id="usuario" placeholder="Usuario / Correo" name="usuario">
 
                             <label for="">Contraseña</label>
-                            <input type="password" class="" id="password" placeholder="Contraseña" name="password">
+                            <input type="password" class="campo_vacio" id="password" placeholder="Contraseña" name="password">
 
                             <label for="">Datos extra</label>
                             <input type="text" class="" id="datos_extra" placeholder="Datos extra" name="datos_extra">
@@ -63,5 +64,6 @@
     <script src="node_modules/what-input/dist/what-input.js"></script>
     <script src="node_modules/foundation-sites/dist/js/foundation.js"></script>
     <script src="js/app.js"></script>
-  </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+</body>
 </html>

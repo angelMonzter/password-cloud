@@ -3,8 +3,8 @@
 	require("conexion.php");
 	class Datos_cuenta extends DBA{
 		public function alta($datos_cuenta_id,$nombre_cuenta,$usuario,$password,$datos_extra,$usuario_sid) {
-			$this->sentencia = "INSERT INTO datos_cuenta VALUES ($datos_cuenta_id,'$nombre_cuenta','$usuario','$password','$datos_extra','$usuario_sid');";
-			$this->ejecutar_sentencia();
+			$this->sentencia = "INSERT INTO datos_cuenta VALUES ('$datos_cuenta_id','$nombre_cuenta','$usuario','$password','$datos_extra','$usuario_sid');";
+			return $this->ejecutar_sentencia();
 		}
 		public function modificar($nombre_cuenta,$usuario,$password,$datos_extra,$usuario_sid,$cuenta_editar_id){
 			$this->sentencia="UPDATE datos_cuenta SET nombre_cuenta = '$nombre_cuenta', usuario = '$usuario', password = '$password' , datos_extra = '$datos_extra', usuario_sid = '$usuario_sid' WHERE datos_cuenta_id = '$cuenta_editar_id';";
@@ -30,7 +30,7 @@
 	    $password = $_POST['password'];
 		$datos_extra = $_POST['datos_extra'];
 	    $cuenta_editar_id = $_POST['cuenta_editar_id'];
-	    $usuario_sid = 0;
+	    $usuario_sid = $_POST['usuario_id'];
 
 	    if ( empty($usuario) || empty($password) ) {
 	    	$respuesta = array(
@@ -52,7 +52,7 @@
 				}else{
 					$respuesta = array(
 						'respuesta' => 'editado',
-						'url' => 'password.html'
+						'url' => 'passwords.html?usuario_id=' . $usuario_sid
 					);
 				}
 		    }else{
@@ -61,6 +61,7 @@
 			    );
 		    }
 	    }
+		
 		die(json_encode($respuesta));
 	}
 
@@ -73,15 +74,15 @@
 	    $eliminado = $obj->eliminar($id);
 
 	    if ($eliminado) {
-		    $respuesta = array(
-		        'respuesta' => 'eliminado'
-		    );
+	 	    $respuesta = array(
+	 	        'respuesta' => 'eliminado'
+	 	    );
 	    }else{
-			$respuesta = array(
-		        'respuesta' => 'error'
-		    );
+	 		$respuesta = array(
+	 	        'respuesta' => 'error'
+	 	    );
 	    }
 
-		die(json_encode($respuesta));
+	 	die(json_encode($respuesta));
 	}
 ?>

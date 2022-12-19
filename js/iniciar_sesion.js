@@ -4,25 +4,33 @@ $('.iniciar_sesion').on('click', function(e) {
     
     var datos = $('#datos_sesion').serializeArray();
 
-    $.ajax({
-        type: 'POST',
-        data: datos,
-        url: 'php/iniciar_sesion.php',
-        dataType: 'json',
-        success: function(data) {
-            if (data.respuesta == 'exito') {
-                const spin = $('#mostrar_spinner');
-                spin.html('<div class="spinner"></div>');
-                setTimeout(function() {
-                    window.location.href = 'passwords.html?usuario_id=' + data.usuario;
-                }, 2000);
-            }else{
-                if(data.usuario == '' || data.usuario == datos.usuario){
-                    $('.usuario_sesion').css("border", "1px solid red");
+    if(datos[0].value == '' || datos[1].value == ''){
+        $('.campo_vacio').addClass("input_error");
+    }else{
+        $.ajax({
+            type: 'POST',
+            data: datos,
+            url: 'php/iniciar_sesion.php',
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+                if (data.respuesta == 'exito') {
+                    const spin = $('#mostrar_spinner');
+                    spin.html('<div class="spinner"></div>');
+                    setTimeout(function() {
+                        window.location.href = 'passwords.html?usuario_id=' + data.usuario;
+                    }, 2000);
+                }else{
+                    $.alert({
+                        title: '',
+                        content: 'Correo o contraseña incorrectos',
+                        boxWidth: '90%',
+                        useBootstrap: false,
+                    });
                 }
             }
-        }
-    })
+        })
+    }
 });
 $('.recuperar_contraseña').on('submit', function(e) {
     e.preventDefault();

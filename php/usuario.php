@@ -4,7 +4,7 @@
 	class Usuario extends DBA{
 		public function alta($usuario_id,$nombre,$usuario,$correo,$password) {
 			$this->sentencia = "INSERT INTO usuario VALUES ($usuario_id,'$nombre','$usuario','$correo','$password');";
-			$this->ejecutar_sentencia();
+			return $this->obtener_sentencia();
 		}
 		public function consulta() {
 			$this->sentencia = "SELECT * FROM usuario;";
@@ -39,6 +39,8 @@
 	    $password = $_POST['password'];
 	    $editar = $_POST['editar'];
 
+	    //CONSULTAR CORREO REPETIDOS PARA NO REPETIR USUARIOS
+
 	    if ( empty($usuario) || empty($correo) || empty($password) ) {
 	    	$respuesta = array(
 		        'respuesta' => 'error'
@@ -54,7 +56,7 @@
 		    if ($resultado) {
 			    if(empty($editar)){
 					$respuesta = array(
-						'respuesta' => 'agregado'
+						'respuesta' => 'registro'
 					);
 				}else{
 					$respuesta = array(

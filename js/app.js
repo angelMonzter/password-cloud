@@ -2,6 +2,7 @@ let filtro;
 let datos_api;
 let sesion;
 let usuario;
+let registro;
 
 function redireccionar(url) {
     setTimeout(function() {
@@ -16,28 +17,60 @@ function limpiarHTML(){
         contenido.removeChild(contenido.firstChild);
     }
 }
-
-function createData(dataThis) {
-	$.ajax({
-    type: 'POST',
-    data: $(dataThis).serializeArray(),
-    url: $(dataThis).attr('action'),
-    dataType: 'json',
-    success: function(data) {
-            //resultado(data);
-    	if (data.respuesta === 'agregado') {
-    		$(dataThis)[0].reset();
-    	}
-    	if (data.respuesta === 'editado') {
-    		//redireccionar(data.url);
-            console.log(data);
-            $(dataThis)[0].reset();
-            $('#cuenta_editar_id').val('');
-    	}
-    }
-  })
+function alerta(mensaje) {
+    $.alert({
+        title: '',
+        content: mensaje,
+        boxWidth: '90%',
+        useBootstrap: false,
+    });
 }
 
+function createData(dataThis) {
+
+    const datos = $(dataThis).serializeArray();
+
+    datos.push({name: 'usuario_id', value: usuario});
+
+    if($('.campo_vacio').val() == ''){
+        $('.campo_vacio').addClass("input_error");
+    }else{
+    	$.ajax({
+        type: 'POST',
+        data: datos,
+        url: $(dataThis).attr('action'),
+        dataType: 'json',
+        success: function(data) {
+                const respuesta = data.respuesta;
+                switch (respuesta) {
+                    case 'agregado':
+                        $(dataThis)[0].reset();
+                        alerta('Agregado!');
+                        $('.campo_vacio').removeClass("input_error");
+                        break;
+                    case 'editado':
+                        alerta('Editado!');
+
+                        redireccionar(data.url);
+                        $(dataThis)[0].reset();
+                        $('#cuenta_editar_id').val('');
+                        $('.campo_vacio').removeClass("input_error");
+                        break;
+                    case 'registro':
+                        alerta('Registrado!');
+
+                        $(dataThis)[0].reset();
+                        redireccionar('login.html');
+                        $('.campo_vacio').removeClass("input_error");
+                        break;
+                    default:
+                        alerta('Error');
+                        break;
+                }
+            }
+        })
+    }
+}
 function deleteData(id, action, tabla) {
     $.confirm({
         boxWidth: '90%',
@@ -46,12 +79,7 @@ function deleteData(id, action, tabla) {
         content: 'Confirma para eliminar',
         buttons: {
             confirmar: function () {
-                $.alert({
-                    title: '',
-                    content: 'Eliminado!',
-                    boxWidth: '90%',
-                    useBootstrap: false,
-                });
+                alerta('Eliminado!');
 
                 $.ajax({
                     type: 'POST',
@@ -67,23 +95,18 @@ function deleteData(id, action, tabla) {
                 })
             },
             cancelar: function () {
-                $.alert({
-                    title: '',
-                    content: 'Cancelado!',
-                    boxWidth: '90%',
-                    useBootstrap: false,
-                });
+                alerta('Cancelado!');
             }
         }
     });
 }
 
-function obtener_datos(filtro, action, tabla, funcionamiento) {
-    console.log(filtro, action, tabla, funcionamiento);
+function obtener_datos(filtro, action, tabla, funcionamiento, $usuario) {
     $.ajax({
         type: 'POST',
         data: {
             filtro: filtro,
+            usuario_id: usuario,
             obtener: tabla
         },
         url: action,
@@ -258,6 +281,8 @@ $('.container_tarjetas').on('click', '.usuario_copiar', function(e){
     const input_valor =  jQuery('[id-copiar="' + id_copiar + '"]').children('.info_usuario').last();
 
     navigator.clipboard.writeText(input_valor.val());
+
+    alerta('Copiado!');
 });
 
 $('.container_tarjetas').on('click', '.password_copiar', function(e){
@@ -268,6 +293,8 @@ $('.container_tarjetas').on('click', '.password_copiar', function(e){
     const input_valor =  jQuery('[id-copiar="' + id_copiar + '"]').children('.info_password').last();
 
     navigator.clipboard.writeText(input_valor.val());
+    
+    alerta('Copiado!');
 });
 
 $( document ).ready(function() {
@@ -280,8 +307,13 @@ $( document ).ready(function() {
     //consultar la URL para obtener el id a editar
     filtro = urlParams.get('editar_id');
 
+    registro = urlParams.get('registro');
+
     if (usuario == '' || usuario == null || usuario == undefined) {
-        redireccionar('login.html');
+        if (registro) {
+        }else{
+            redireccionar('login.html');
+        }
     }else{
         obtener_datos(usuario, 'php/usuario.php', 'usuario', 'login');
     }

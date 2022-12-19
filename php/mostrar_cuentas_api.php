@@ -2,7 +2,7 @@
 	require("conexion.php");
 	class Mostrar_cuenta extends DBA{
 		public function buscar_cuentas($filtro) {
-            $this->sentencia = "SELECT * FROM datos_cuenta WHERE ( datos_cuenta_id LIKE '%$filtro%' || nombre_cuenta LIKE '%$filtro%' || usuario LIKE '%$filtro%' || datos_extra LIKE '%$filtro%'); ";  
+            $this->sentencia = "SELECT * FROM datos_cuenta WHERE ( datos_cuenta_id LIKE '%$filtro%' || nombre_cuenta LIKE '%$filtro%' || usuario LIKE '%$filtro%' || datos_extra LIKE '%$filtro%' ); ";  
 			return $this->obtener_sentencia();
         }
 	}
@@ -10,14 +10,17 @@
 	$obj = new Mostrar_cuenta();
 
 	$filtro = $_POST['filtro'];
+	$usuario_id = $_POST['usuario_id'];
 
-	$consultado = $obj->buscar_cuentas($filtro,  $numero_columnas, $columnas);
+	$consultado = $obj->buscar_cuentas($filtro);
 	while ( $fila = $consultado->fetch_assoc() ){
-	
-		$cuenta_id[] = $fila["datos_cuenta_id"];
 
-		$numero_cuentas = count($cuenta_id);
-		$array_cuentas[] = $fila;
+		if ($fila["usuario_sid"] == $usuario_id) {
+			$cuenta_id[] = $fila["datos_cuenta_id"];
+
+			$numero_cuentas = count($cuenta_id);
+			$array_cuentas[] = $fila;
+		}
 	}
 
 	$datos = array(
