@@ -36,13 +36,16 @@ input:focus{
     border: 1px solid rgba(18, 50, 155, 0.486)!important;
 }
 label{
-    display: block;
-    color:grey;
+    display: none!important;
+    color: grey;
     position: absolute;
     font-size: 13px!important;
     right: 0px;
     padding: 7px 10px 0 0;
     opacity: .8;
+}
+.aparecer_label{
+    display: block!important;
 }
 .contenedor{
     background-color: white;

@@ -1,3 +1,9 @@
+$( "input" ).focus(function() {
+  $( this ).prev( "label" ).addClass('aparecer_label');
+  //if ( $( this ).prev( "label" ).hasClass( 'aparecer_label' ) && $( this ).val() != '') {
+  //  $( this ).prev( "label" ).removeClass('aparecer_label');
+  //}
+});
 
 $('.iniciar_sesion').on('click', function(e) {
     e.preventDefault();

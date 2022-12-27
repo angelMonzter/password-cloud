@@ -41,13 +41,17 @@ input:focus {
 }
 
 label {
-  display: block;
+  display: none !important;
   color: grey;
   position: absolute;
   font-size: 13px !important;
   right: 0px;
   padding: 7px 10px 0 0;
   opacity: 0.8;
+}
+
+.aparecer_label {
+  display: block !important;
 }
 
 .contenedor {

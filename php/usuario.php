@@ -14,6 +14,10 @@
 			$this->sentencia = "SELECT * FROM usuario WHERE usuario_id = $usuario_id;";
 			return $this->obtener_sentencia();
 		}
+		public function consulta_usuario($usuario) {
+			$this->sentencia = "SELECT * FROM usuario WHERE usuario = '$usuario';";
+			return $this->obtener_sentencia();
+		}
 		public function modificar($plan_id,$status_cliente, $fecha_hoy){
 			$this->sentencia="UPDATE seguro_persona SET status_cliente_seguro = '$status_cliente', fecha_cambio_status = '$fecha_hoy' WHERE seguro_perona_id = '$plan_id';";
 			return $this->ejecutar_sentencia();
@@ -39,7 +43,7 @@
 	    $password = $_POST['password'];
 	    $editar = $_POST['editar'];
 
-	    //CONSULTAR CORREO REPETIDOS PARA NO REPETIR USUARIOS
+	    //CONSULTAR USUARIO REPETIDOS PARA NO REPETIR
 
 	    if ( empty($usuario) || empty($correo) || empty($password) ) {
 	    	$respuesta = array(
@@ -48,16 +52,31 @@
 	    }else{
 
 		    if (empty($editar)) {
-		    	$resultado = $obj->alta($usuario_id,$nombre,$usuario,$correo,$password);
+
+		    	$consultado = $obj->consulta_usuario($usuario);
+				while ( $fila = $consultado->fetch_assoc() ){
+					$usuario_repetido = $fila["usuario"];
+				}
+		    	if (empty($usuario_repetido)) {
+		    		$resultado = $obj->alta($usuario_id,$nombre,$usuario,$correo,$password);
+		    	}else{
+		    		$resultado = 'registrado';
+		    	}
 	    	}else{
 		    	$resultado = $obj->modificar($nombre,$usuario,$correo,$password,$usuario_id);
 	    	}
 
 		    if ($resultado) {
 			    if(empty($editar)){
-					$respuesta = array(
-						'respuesta' => 'registro'
-					);
+					if (!empty($usuario_repetido)) {
+						$respuesta = array(
+							'respuesta' => 'registrado'
+						);
+					}else{
+						$respuesta = array(
+							'respuesta' => 'registro'
+						);
+					}
 				}else{
 					$respuesta = array(
 						'respuesta' => 'editado',

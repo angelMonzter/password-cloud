@@ -4,6 +4,10 @@ let sesion;
 let usuario;
 let registro;
 
+$( "input" ).focus(function() {
+  $( this ).prev( "label" ).addClass('aparecer_label');
+});
+
 function redireccionar(url) {
     setTimeout(function() {
         window.location.href = url;
@@ -42,6 +46,7 @@ function createData(dataThis) {
         dataType: 'json',
         success: function(data) {
                 const respuesta = data.respuesta;
+                console.log(data);
                 switch (respuesta) {
                     case 'agregado':
                         $(dataThis)[0].reset();
@@ -62,6 +67,10 @@ function createData(dataThis) {
                         $(dataThis)[0].reset();
                         redireccionar('login.html');
                         $('.campo_vacio').removeClass("input_error");
+                        break;
+                    case 'registrado':
+                        alerta('Error, usuario registrado!');
+
                         break;
                     default:
                         alerta('Error');
@@ -181,7 +190,7 @@ function mostrar_cuentas(datos_api) {
                             <div class="large-6 medium-6 small-10 cell">
                                 <h4>Usuario / Correo - ${datos_api.cuentas[i].usuario}</h4>
                             </div>
-                            <div class="large-6  medium-6 small-2 cell text-center">
+                            <div class="large-6  medium-6 small-2 cell text-right">
                                 <button class="button tiny hollow primary usuario_copiar" id-copiar="${datos_api.cuentas[i].datos_cuenta_id}">
                                     <i class="fa-solid fa-copy"></i>
                                     <input type="hidden" class="info_usuario" value="${datos_api.cuentas[i].usuario}">
@@ -192,7 +201,7 @@ function mostrar_cuentas(datos_api) {
                             <div class="large-6 medium-6 small-10 cell">
                                 <h4>Contraseña - ********* </h4>
                             </div>
-                            <div class="large-6 medium-6 small-2 cell text-center">
+                            <div class="large-6 medium-6 small-2 cell text-right">
                                 <button class="button tiny hollow primary password_copiar" id-copiar="${datos_api.cuentas[i].datos_cuenta_id}">
                                     <i class="fa-solid fa-copy"></i>
                                     <input type="hidden" class="info_password" value="${datos_api.cuentas[i].password}">
